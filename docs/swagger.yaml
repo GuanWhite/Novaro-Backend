@@ -1,0 +1,353 @@
+definitions:
+  api.CommentsApi:
+    properties:
+      content:
+        type: string
+      parentId:
+        type: string
+      postId:
+        type: string
+      userId:
+        type: string
+    type: object
+  api.TagsRecordsApi:
+    properties:
+      postId:
+        type: string
+      tagId:
+        type: string
+      userId:
+        type: string
+    type: object
+  model.Comments:
+    properties:
+      children:
+        items:
+          $ref: '#/definitions/model.Comments'
+        type: array
+      content:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      parentId:
+        type: string
+      postId:
+        type: string
+      user:
+        $ref: '#/definitions/model.Users'
+      userId:
+        type: string
+    type: object
+  model.Imgs:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      path:
+        type: string
+      sourceId:
+        type: string
+    type: object
+  model.NftInfo:
+    properties:
+      createAt:
+        type: string
+      id:
+        type: string
+      level:
+        type: integer
+      nft:
+        $ref: '#/definitions/model.NftLevel'
+      points:
+        type: number
+      wallet:
+        type: string
+    type: object
+  model.NftLevel:
+    properties:
+      createdAt:
+        type: string
+      left:
+        type: integer
+      level:
+        type: string
+      right:
+        type: integer
+      url:
+        type: string
+    type: object
+  model.Posts:
+    properties:
+      Imgs:
+        items:
+          $ref: '#/definitions/model.Imgs'
+        type: array
+      comments:
+        $ref: '#/definitions/model.Comments'
+      commentsAmount:
+        type: integer
+      content:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      isLike:
+        type: boolean
+      likesAmount:
+        type: integer
+      originalId:
+        type: string
+      repostsAmount:
+        type: integer
+      sourceId:
+        type: string
+      user:
+        $ref: '#/definitions/model.Users'
+      userId:
+        type: string
+      viewAmount:
+        type: integer
+    type: object
+  model.Tags:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      posts:
+        items:
+          $ref: '#/definitions/model.Posts'
+        type: array
+      sourceId:
+        type: string
+    type: object
+  model.Users:
+    properties:
+      avatar:
+        type: string
+      createdAt:
+        type: string
+      creditScore:
+        type: number
+      followers:
+        type: integer
+      following:
+        type: integer
+      id:
+        type: string
+      invitationCode:
+        type: string
+      lastLogin:
+        type: string
+      nftInfo:
+        $ref: '#/definitions/model.NftInfo'
+      twitterID:
+        type: string
+      userLevel:
+        type: integer
+      userName:
+        type: string
+      userScore:
+        type: number
+      walletPublicKey:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /v1/api/comments/add:
+    post:
+      consumes:
+      - application/json
+      description: Add a new comment to the system
+      parameters:
+      - description: Comment object
+        in: body
+        name: comment
+        required: true
+        schema:
+          $ref: '#/definitions/api.CommentsApi'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "400":
+          description: ""
+      summary: Add a new comment
+      tags:
+      - comments
+  /v1/api/comments/delete:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a comment from the database based on the provided ID
+      parameters:
+      - description: Comment ID
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "400":
+          description: ""
+      summary: Delete a comment by ID
+      tags:
+      - comments
+  /v1/api/comments/getCommentsListByParentId:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of child comments for a specific parent comment
+      parameters:
+      - description: Parent Comment ID
+        in: query
+        name: parentId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Comments'
+            type: array
+        "400":
+          description: ""
+      summary: Get comments by parent ID
+      tags:
+      - comments
+  /v1/api/comments/getCommentsListByPostId:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of comments for a specific post
+      parameters:
+      - description: Post ID
+        in: query
+        name: postId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Comments'
+            type: array
+        "400":
+          description: ""
+      summary: Get comments by post ID
+      tags:
+      - comments
+  /v1/api/comments/getCommentsListByUserId:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of comments made by a specific user
+      parameters:
+      - description: UserID
+        in: query
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Comments'
+            type: array
+        "400":
+          description: ""
+      summary: Get comments by user ID
+      tags:
+      - comments
+  /v1/api/invitation/codes/add:
+    get:
+      consumes:
+      - application/json
+      description: Generate new invitation codes and save to the system
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ' Successfully generated and saved invitation codes'
+        "500":
+          description: ' Error generating and adding invitation codes'
+      summary: Generate new invitation codes
+  /v1/api/tags/list:
+    get:
+      description: Retrieve a list of all tags
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            items:
+              $ref: '#/definitions/model.Tags'
+            type: array
+        "400":
+          description: ""
+      summary: Get list of tags
+      tags:
+      - tags
+  /v1/api/tags/records/add:
+    post:
+      consumes:
+      - application/json
+      description: Add new tags records to the database
+      parameters:
+      - description: Tags records to add
+        in: body
+        name: tagsRecords
+        required: true
+        schema:
+          $ref: '#/definitions/api.TagsRecordsApi'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully added tags records
+        "400":
+          description: ""
+      summary: Add new tags records
+      tags:
+      - tags-records
+  /v1/api/upload/getTokenImg:
+    get:
+      consumes:
+      - application/json
+      description: get the image based on the tokenId
+      parameters:
+      - description: sourceId
+        in: query
+        name: sourceId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "400":
+          description: ""
+      summary: get image
+      tags:
+      - upload
+swagger: "2.0"
