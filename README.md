@@ -1,4 +1,4 @@
-# novaro-server
+# Novaro-Backend
 
 ## Login
 
@@ -30,3 +30,13 @@ go run src/main.go | tee out.log
 ```
 
 2.[REST API](./api/REST-API.http)
+
+Windows本地运行Go项目
+
+```
+# 安装后端依赖包
+go mod tidy
+
+# 启动后端服务
+go run cmd/main.go
+```
